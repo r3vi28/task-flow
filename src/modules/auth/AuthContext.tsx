@@ -1,27 +1,22 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import type { PropsWithChildren } from 'react';
 import { getUser, logout as authLogout, saveSession } from './authService';
 import type { AuthUser, LoginResponse } from '../../types/auth';
 
 interface AuthContextType {
   user: AuthUser | null
-  login: (response: LoginResponse) => void
+  login: (data: LoginResponse) => void
   logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(getUser())
 
-  useEffect(() => {
-    const currentUser = getUser()
-    setUser(currentUser)
-  }, [])
-
-  const handleLogin = (response: LoginResponse) => {
-    saveSession(response.token, response.user)
-    setUser(response.user)
+  const handleLogin = (data: LoginResponse) => {
+    saveSession(data.token, data.user)
+    setUser(data.user)
   }
 
   const handleLogout = () => {
@@ -31,7 +26,7 @@ export const AuthProvider: React.FC<PropsWithChildren<{}>> = ({ children }) => {
 
   const value: AuthContextType = {
     user,
-    login: handleLogin,
+    login: (data: LoginResponse) => handleLogin(data),
     logout: handleLogout,
   }
 

@@ -10,7 +10,7 @@ export interface RegisterBody {
 }
 
 export interface AuthUser {
-  id: string;
+  id: number;
   name: string;
   email: string;
   role: 'ADMIN' | 'MEMBER';

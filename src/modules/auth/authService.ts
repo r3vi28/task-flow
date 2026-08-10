@@ -11,9 +11,15 @@ export const getToken = (): string | null => {
 }
 
 export const getUser = (): AuthUser | null => {
-  const raw = sessionStorage.getItem('user')
-  if (!raw) return null
-  return JSON.parse(raw) as AuthUser
+const raw = sessionStorage.getItem('user')
+    if (!raw) return null
+    try {
+      return JSON.parse(raw) as AuthUser
+    } catch {
+      // If stored data is invalid, clear it
+      sessionStorage.removeItem('user')
+      return null
+    }
 }
 
 export const logout = (): void => {
@@ -27,6 +33,6 @@ export const login = async (data: LoginBody): Promise<LoginResponse> => {
 }
 
 export const register = async (data: RegisterBody): Promise<AuthUser> => {
-  const response = await api.post<AuthUser>('/auth/register', data)
+  const response = await api.post<AuthUser>('/api/auth/register', data)
   return response.data
 }
