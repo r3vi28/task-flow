@@ -1,5 +1,94 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { z } from 'zod';
+import { register as authRegister } from './authService';
+import { useAuth } from './AuthContext';
+
+const schema = z.object({
+  name: z.string().nonempty({ message: 'El nombre no puede estar vacío' }),
+  email: z.string().email({ message: 'Formato de email inválido' }),
+  password: z.string().min(6, { message: 'Contraseña mínima 6 caracteres' }),
+});
+
+type RegisterForm = z.infer<typeof schema>;
 
 export const RegisterPage: React.FC = () => {
-  return <div>RegisterPage</div>;
+  const navigate = useNavigate();
+  const { user: authUser } = useAuth();
+  const [values, setValues] = useState<RegisterForm>({ name: '', email: '', password: '' });
+  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [generalError, setGeneralError] = useState<string>('');
+
+  useEffect(() => {
+    if (authUser) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [authUser, navigate]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValues(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = schema.safeParse(values);
+    if (!res.success) {
+      const fieldErrors: Record<string, string> = {};
+      res.error.issues.forEach(err => {
+        const key = err.path[0] as string;
+        if (key) fieldErrors[key] = err.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
+    setGeneralError('');
+    try {
+      await authRegister(res.data);
+      navigate('/login', { replace: true });
+    } catch (err: any) {
+      setGeneralError(err?.response?.data?.message || 'Error al registrar. Por favor, inténtalo de nuevo');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} noValidate>
+      <div>
+        <label>Nombre:</label>
+        <input
+          type="text"
+          name="name"
+          value={values.name}
+          onChange={handleChange}
+        />
+        {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
+      </div>
+      <div>
+        <label>Email:</label>
+        <input
+          type="email"
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+        />
+        {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+      </div>
+      <div>
+        <label>Contraseña:</label>
+        <input
+          type="password"
+          name="password"
+          value={values.password}
+          onChange={handleChange}
+        />
+        {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
+      </div>
+      {generalError && <p style={{ color: 'red' }}>{generalError}</p>}
+      <button type="submit">Registrarse</button>
+      <p>
+        ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+      </p>
+    </form>
+  );
 };
