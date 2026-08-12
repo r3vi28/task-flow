@@ -33,6 +33,6 @@ export const login = async (data: LoginBody): Promise<LoginResponse> => {
 }
 
 export const register = async (data: RegisterBody): Promise<AuthUser> => {
-  const response = await api.post<AuthUser>('/api/auth/register', data)
+  const response = await api.post<AuthUser>('/auth/register', data)
   return response.data
 }
