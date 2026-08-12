@@ -1,29 +1,19 @@
-import React from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import type { User } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../auth/AuthContext'
 
-export const DashboardPage: React.FC = () => {
-  const { user: contextUser, logout } = useAuth();
-
-  const user: User | null = contextUser ?? (() => {
-    try {
-      const raw = sessionStorage.getItem('user');
-      return raw ? JSON.parse(raw) as User : null;
-    } catch {
-      return null;
-    }
-  })();
+export const DashboardPage = () => {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
 
   const handleLogout = () => {
-    logout();
-    sessionStorage.clear();
-    window.location.href = '/login';
-  };
+    logout()
+    navigate('/login', { replace: true })
+  }
 
   return (
     <div>
       <h2>Bienvenido, {user?.name}</h2>
       <button onClick={handleLogout}>Cerrar sesión</button>
     </div>
-  );
-};
+  )
+}
