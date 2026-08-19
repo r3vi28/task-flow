@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ProjectFormModal } from './ProjectFormModal'
 import type { Project } from '../../types/project'
 import { useAuth } from '../auth/AuthContext'
 import { getProjects } from './projectService'
@@ -8,6 +9,11 @@ export const ProjectsPage: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { user } = useAuth()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const handleSuccess = (newProject: Project) => {
+    setProjects((prev) => [...prev, newProject])
+    setIsModalOpen(false)
+  }
 
   useEffect(() => {
     setLoading(true)
@@ -19,7 +25,7 @@ export const ProjectsPage: React.FC = () => {
   }, [])
 
   const handleCreate = () => {
-    console.log('crear proyecto')
+    setIsModalOpen(true)
   }
 
   if (loading) {
@@ -41,9 +47,12 @@ export const ProjectsPage: React.FC = () => {
           </li>
         ))}
       </ul>
-      {user?.role === 'ADMIN' && (
-        <button onClick={handleCreate}>Nuevo proyecto</button>
-      )}
+{user?.role === 'ADMIN' && (
+            <>
+             <button onClick={handleCreate}>Nuevo proyecto</button>
+             <ProjectFormModal isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)} onSuccess={handleSuccess} />
+            </>
+          )}
     </div>
   )
 }
