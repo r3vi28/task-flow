@@ -47,10 +47,6 @@ export const ProjectsPage: React.FC = () => {
   }
 
   const handleDelete = async (project: Project) => {
-    if (!window.confirm(`¿Eliminar el proyecto "${project.name}"?`)) {
-      return
-    }
-
     setActionError(null)
 
     try {

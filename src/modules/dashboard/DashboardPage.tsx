@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 
 export const DashboardPage = () => {
@@ -13,6 +13,7 @@ export const DashboardPage = () => {
   return (
     <div>
       <h2>Bienvenido, {user?.name}</h2>
+      <Link to="/projects">Ver proyectos</Link>
       <button onClick={handleLogout}>Cerrar sesión</button>
     </div>
   )
