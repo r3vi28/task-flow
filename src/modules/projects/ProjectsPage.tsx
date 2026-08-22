@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ProjectFormModal } from './ProjectFormModal'
+import { ProjectCard } from './ProjectCard'
 import type { Project } from '../../types/project'
 import { useAuth } from '../auth/AuthContext'
 import { deleteProject, getProjects } from './projectService'
@@ -76,12 +77,12 @@ export const ProjectsPage: React.FC = () => {
       <ul>
         {projects.map((p) => (
           <li key={p.id}>
-            <strong>{p.name}</strong>
-            <p>{p.description}</p>
-            <button type="button" onClick={() => handleEdit(p)}>Editar</button>
-            {user?.role === 'ADMIN' && (
-              <button type="button" onClick={() => handleDelete(p)}>Eliminar</button>
-            )}
+            <ProjectCard
+              project={p}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              isAdmin={user?.role === 'ADMIN'}
+            />
           </li>
         ))}
       </ul>
