@@ -5,6 +5,7 @@ import { LoginPage } from '../modules/auth/LoginPage';
 import { RegisterPage } from '../modules/auth/RegisterPage';
 import { DashboardPage } from '../modules/dashboard/DashboardPage';
 import { ProjectsPage } from '../modules/projects/ProjectsPage';
+import { TasksPage } from '../modules/tasks/TasksPage';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ export const AppRouter: React.FC = () => {
         <Route element={<ProtectedRoute />}>          
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:projectId/tasks" element={<TasksPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
