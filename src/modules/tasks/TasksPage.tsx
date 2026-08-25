@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { Task } from '../../types/task'
 import { useAuth } from '../auth/AuthContext'
+import { TaskCard } from './TaskCard'
 import { TaskFormModal } from './TaskFormModal'
 import { deleteTask, getTasks } from './taskService'
 
@@ -88,21 +89,13 @@ export const TasksPage = () => {
         <ul>
           {tasks.map((task) => (
             <li key={task.id}>
-              <h3>{task.title}</h3>
-              <p>Estado: {task.status}</p>
-              <p>Prioridad: {task.priority}</p>
-              <button type="button" onClick={() => handleEditTask(task)}>
-                Editar
-              </button>
-              {user?.role === 'ADMIN' && (
-                <button
-                  type="button"
-                  onClick={() => handleDeleteTask(task)}
-                  disabled={deletingTaskId === task.id}
-                >
-                  {deletingTaskId === task.id ? 'Eliminando...' : 'Eliminar'}
-                </button>
-              )}
+              <TaskCard
+                task={task}
+                onEdit={handleEditTask}
+                onDelete={handleDeleteTask}
+                isDeleting={deletingTaskId === task.id}
+                isAdmin={user?.role === 'ADMIN'}
+              />
             </li>
           ))}
         </ul>
