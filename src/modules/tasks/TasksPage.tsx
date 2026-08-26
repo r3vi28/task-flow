@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import type { Task } from '../../types/task'
 import { useAuth } from '../auth/AuthContext'
 import { TaskCard } from './TaskCard'
+import { TaskFilters } from './TaskFilters'
 import { TaskFormModal } from './TaskFormModal'
 import { deleteTask, getTasks } from './taskService'
 
@@ -13,12 +14,18 @@ export const TasksPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
+  const [filterStatus, setFilterStatus] = useState('')
+  const [filterPriority, setFilterPriority] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [deletingTaskId, setDeletingTaskId] = useState<number | null>(null)
 
   const parsedProjectId = Number(projectId)
   const isValidProjectId = Boolean(projectId) && Number.isInteger(parsedProjectId) && parsedProjectId > 0
+  const filteredTasks = tasks.filter((task) =>
+    (!filterStatus || task.status === filterStatus)
+    && (!filterPriority || task.priority === filterPriority),
+  )
 
   useEffect(() => {
     if (!isValidProjectId) {
@@ -82,12 +89,18 @@ export const TasksPage = () => {
     <div>
       <h2>Tareas</h2>
       <button type="button" onClick={handleCreateTask}>Nueva tarea</button>
+      <TaskFilters
+        status={filterStatus}
+        priority={filterPriority}
+        onStatusChange={setFilterStatus}
+        onPriorityChange={setFilterPriority}
+      />
       {actionError && <p>{actionError}</p>}
       {loading && <p>Cargando...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && (
         <ul>
-          {tasks.map((task) => (
+          {filteredTasks.map((task) => (
             <li key={task.id}>
               <TaskCard
                 task={task}
