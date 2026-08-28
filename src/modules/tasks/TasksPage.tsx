@@ -5,7 +5,7 @@ import { useAuth } from '../auth/AuthContext'
 import { TaskCard } from './TaskCard'
 import { TaskFilters } from './TaskFilters'
 import { TaskFormModal } from './TaskFormModal'
-import { deleteTask, getTasks } from './taskService'
+import { deleteTask, getTasks, updateTask } from './taskService'
 import { ConfirmModal } from '../../components/ConfirmModal'
 import { BackNav } from '../../components/BackNav'
 import { useToast } from '../../components/ToastContext'
@@ -29,6 +29,8 @@ export const TasksPage = () => {
   const filteredTasks = tasks.filter((task) =>
     (!filterStatus || task.status === filterStatus)
     && (!filterPriority || task.priority === filterPriority),
+  ).sort((firstTask, secondTask) =>
+    Number(firstTask.status === 'DONE') - Number(secondTask.status === 'DONE'),
   )
 
   useEffect(() => {
@@ -75,6 +77,17 @@ export const TasksPage = () => {
 
   const handleDeleteTask = (task: Task) => {
     setTaskToDelete(task)
+  }
+
+  const handleStatusChange = async (task: Task, newStatus: Task['status']) => {
+    try {
+      const updatedTask = await updateTask(task.id, { status: newStatus })
+      setTasks((currentTasks) =>
+        currentTasks.map((currentTask) => currentTask.id === updatedTask.id ? updatedTask : currentTask),
+      )
+    } catch (caughtError: unknown) {
+      showError(caughtError instanceof Error ? caughtError.message : 'Error al actualizar el estado')
+    }
   }
 
   const handleConfirmDeleteTask = async () => {
@@ -124,6 +137,7 @@ export const TasksPage = () => {
                 task={task}
                 onEdit={handleEditTask}
                 onDelete={handleDeleteTask}
+                onStatusChange={handleStatusChange}
                 isDeleting={deletingTaskId === task.id}
                 isAdmin={user?.role === 'ADMIN'}
               />

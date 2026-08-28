@@ -1,21 +1,38 @@
 import type { Task } from '../../types/task'
 
+const statusLabels: Record<Task['status'], string> = {
+  TODO: 'Pendiente',
+  IN_PROGRESS: 'En progreso',
+  DONE: 'Completada',
+}
+
 interface Props {
   task: Task
   onEdit: (task: Task) => void
   onDelete: (task: Task) => void
+  onStatusChange: (task: Task, newStatus: Task['status']) => void
   isDeleting: boolean
   isAdmin: boolean
 }
 
-export const TaskCard = ({ task, onEdit, onDelete, isDeleting, isAdmin }: Props) => {
+export const TaskCard = ({ task, onEdit, onDelete, onStatusChange, isDeleting, isAdmin }: Props) => {
+  const statusOptions: Task['status'][] = task.status === 'TODO'
+    ? ['TODO', 'IN_PROGRESS']
+    : task.status === 'IN_PROGRESS'
+      ? ['IN_PROGRESS', 'DONE']
+      : ['DONE']
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
       <h3 className="text-xl font-semibold text-gray-900">{task.title}</h3>
-      <p className="mt-3 text-gray-700">
-        Estado:{' '}
-        <span
-          className={`inline-flex rounded-full px-2.5 py-0.5 text-sm font-semibold ${
+      <div className="mt-3 flex items-center gap-2 text-gray-700">
+        <label htmlFor={`task-status-${task.id}`}>Estado:</label>
+        <select
+          id={`task-status-${task.id}`}
+          value={task.status}
+          onChange={(event) => onStatusChange(task, event.target.value as Task['status'])}
+          disabled={task.status === 'DONE'}
+          className={`rounded-md border border-gray-300 px-2.5 py-1 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 ${
             task.status === 'TODO'
               ? 'bg-gray-100 text-gray-700'
               : task.status === 'IN_PROGRESS'
@@ -23,9 +40,11 @@ export const TaskCard = ({ task, onEdit, onDelete, isDeleting, isAdmin }: Props)
                 : 'bg-green-100 text-green-800'
           }`}
         >
-          {task.status}
-        </span>
-      </p>
+          {statusOptions.map((status) => (
+            <option key={status} value={status}>{statusLabels[status]}</option>
+          ))}
+        </select>
+      </div>
       <p className="mt-2 text-gray-700">
         Prioridad:{' '}
         <span
