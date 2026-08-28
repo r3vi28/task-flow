@@ -93,13 +93,13 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
   if (!isOpen) return null
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div className="modal-content" style={{ backgroundColor: '#fff', padding: '1.5rem', borderRadius: '0.5rem', width: '100%', maxWidth: '500px' }}>
-        <h2>{task ? 'Editar tarea' : 'Nueva tarea'}</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+        <h2 className="text-xl font-semibold text-gray-900">{task ? 'Editar tarea' : 'Nueva tarea'}</h2>
+        {error && <p className="mt-3 text-red-600">{error}</p>}
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="task-title" style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <div className="mt-4">
+            <label htmlFor="task-title" className="mb-1 block font-medium text-gray-700">
               Título
             </label>
             <input
@@ -108,11 +108,11 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               disabled={isSubmitting}
-              style={{ width: '100%', padding: '0.5rem' }}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="task-description" style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <div className="mt-4">
+            <label htmlFor="task-description" className="mb-1 block font-medium text-gray-700">
               Descripción
             </label>
             <textarea
@@ -120,11 +120,11 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               disabled={isSubmitting}
-              style={{ width: '100%', padding: '0.5rem', minHeight: '100px' }}
+              className="min-h-25 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="task-status" style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <div className="mt-4">
+            <label htmlFor="task-status" className="mb-1 block font-medium text-gray-700">
               Estado
             </label>
             <select
@@ -132,15 +132,15 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={status}
               onChange={(event) => setStatus(event.target.value as Task['status'])}
               disabled={isSubmitting}
-              style={{ width: '100%', padding: '0.5rem' }}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
             >
               <option value="TODO">Pendiente</option>
               <option value="IN_PROGRESS">En progreso</option>
               <option value="DONE">Completada</option>
             </select>
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="task-priority" style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <div className="mt-4">
+            <label htmlFor="task-priority" className="mb-1 block font-medium text-gray-700">
               Prioridad
             </label>
             <select
@@ -148,15 +148,15 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={priority}
               onChange={(event) => setPriority(event.target.value as Task['priority'])}
               disabled={isSubmitting}
-              style={{ width: '100%', padding: '0.5rem' }}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
             >
               <option value="LOW">Baja</option>
               <option value="MEDIUM">Media</option>
               <option value="HIGH">Alta</option>
             </select>
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="task-due-date" style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <div className="mt-4">
+            <label htmlFor="task-due-date" className="mb-1 block font-medium text-gray-700">
               Fecha límite
             </label>
             <input
@@ -165,14 +165,23 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={dueDate}
               onChange={(event) => setDueDate(event.target.value)}
               disabled={isSubmitting}
-              style={{ width: '100%', padding: '0.5rem' }}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-            <button type="button" onClick={onClose} disabled={isSubmitting}>
+          <div className="mt-6 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-800 transition-colors hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
               Cancelar
             </button>
-            <button type="submit" disabled={isSubmitting}>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
               {task ? 'Actualizar' : 'Crear'}
             </button>
           </div>
