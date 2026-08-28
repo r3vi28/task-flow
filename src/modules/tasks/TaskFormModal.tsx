@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { z } from 'zod'
 import type { CreateTaskBody, Task } from '../../types/task'
+import { useToast } from '../../components/ToastContext'
 import { createTask, updateTask } from './taskService'
 
 interface Props {
@@ -32,8 +33,8 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
   const [status, setStatus] = useState<Task['status']>('TODO')
   const [priority, setPriority] = useState<Task['priority']>('MEDIUM')
   const [dueDate, setDueDate] = useState('')
-  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { showError } = useToast()
 
   useEffect(() => {
     if (!isOpen) return
@@ -54,7 +55,6 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
       setDueDate('')
     }
 
-    setError(null)
   }, [isOpen, task])
 
   const handleSubmit = async (event: FormEvent) => {
@@ -79,11 +79,11 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
       onClose()
     } catch (caughtError: unknown) {
       if (caughtError instanceof z.ZodError) {
-        setError(caughtError.issues[0]?.message ?? 'Datos inválidos')
+        showError(caughtError.issues[0]?.message ?? 'Datos inválidos')
       } else if (caughtError instanceof Error) {
-        setError(caughtError.message)
+        showError(caughtError.message)
       } else {
-        setError('Error al guardar la tarea')
+        showError('Error al guardar la tarea')
       }
     } finally {
       setIsSubmitting(false)
@@ -96,7 +96,6 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
         <h2 className="text-xl font-semibold text-gray-900">{task ? 'Editar tarea' : 'Nueva tarea'}</h2>
-        {error && <p className="mt-3 text-red-600">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mt-4">
             <label htmlFor="task-title" className="mb-1 block font-medium text-gray-700">

@@ -1,6 +1,7 @@
 import { useState, useEffect} from 'react'
 import type { FormEvent } from 'react';
 import type { Project, CreateProjectBody, UpdateProjectBody } from '../../types/project'
+import { useToast } from '../../components/ToastContext'
 import { createProject, updateProject } from './projectService'
 import { z } from 'zod'
 
@@ -18,8 +19,8 @@ const projectSchema = z.object({
 export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, project }) => {
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
-  const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const { showError } = useToast()
 
   useEffect(() => {
     if (!isOpen) return
@@ -30,7 +31,6 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
       setName('')
       setDescription('')
     }
-    setError(null)
   }, [project, isOpen])
 
   const handleSubmit = async (e: FormEvent) => {
@@ -48,8 +48,14 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
       setIsSubmitting(false)
       onSuccess(saved)
       onClose()
-    } catch (err: any) {
-      setError(err?.message || 'Error al guardar el proyecto')
+    } catch (err: unknown) {
+      if (err instanceof z.ZodError) {
+        showError(err.issues[0]?.message ?? 'Datos inválidos')
+      } else if (err instanceof Error) {
+        showError(err.message)
+      } else {
+        showError('Error al guardar el proyecto')
+      }
       setIsSubmitting(false)
     }
   }
@@ -60,7 +66,6 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
         <h2 className="text-xl font-semibold text-gray-900">{project ? 'Editar proyecto' : 'Nuevo proyecto'}</h2>
-        {error && <p className="mt-3 text-red-600">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mt-4">
             <label htmlFor="project-name" className="mb-1 block font-medium text-gray-700">

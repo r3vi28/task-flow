@@ -7,6 +7,7 @@ import { TaskFilters } from './TaskFilters'
 import { TaskFormModal } from './TaskFormModal'
 import { deleteTask, getTasks } from './taskService'
 import { ConfirmModal } from '../../components/ConfirmModal'
+import { useToast } from '../../components/ToastContext'
 
 export const TasksPage = () => {
   const { projectId } = useParams()
@@ -14,13 +15,13 @@ export const TasksPage = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [actionError, setActionError] = useState<string | null>(null)
   const [filterStatus, setFilterStatus] = useState('')
   const [filterPriority, setFilterPriority] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [deletingTaskId, setDeletingTaskId] = useState<number | null>(null)
   const [taskToDelete, setTaskToDelete] = useState<Task | null>(null)
+  const { showError } = useToast()
 
   const parsedProjectId = Number(projectId)
   const isValidProjectId = Boolean(projectId) && Number.isInteger(parsedProjectId) && parsedProjectId > 0
@@ -78,14 +79,13 @@ export const TasksPage = () => {
   const handleConfirmDeleteTask = async () => {
     if (!taskToDelete) return
 
-    setActionError(null)
     setDeletingTaskId(taskToDelete.id)
 
     try {
       await deleteTask(taskToDelete.id)
       setTasks((currentTasks) => currentTasks.filter((item) => item.id !== taskToDelete.id))
     } catch (caughtError: unknown) {
-      setActionError(caughtError instanceof Error ? caughtError.message : 'Error al eliminar la tarea')
+      showError(caughtError instanceof Error ? caughtError.message : 'Error al eliminar la tarea')
     } finally {
       setDeletingTaskId(null)
       setTaskToDelete(null)
@@ -112,7 +112,6 @@ export const TasksPage = () => {
           </button>
         </div>
       </div>
-      {actionError && <p className="mb-4 text-red-600">{actionError}</p>}
       {loading && <p className="text-gray-600">Cargando...</p>}
       {error && <p className="text-red-600">{error}</p>}
       {!loading && !error && (

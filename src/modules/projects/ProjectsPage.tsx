@@ -3,6 +3,7 @@ import { isAxiosError } from 'axios'
 import { ProjectFormModal } from './ProjectFormModal'
 import { ProjectCard } from './ProjectCard'
 import type { Project } from '../../types/project'
+import { useToast } from '../../components/ToastContext'
 import { useAuth } from '../auth/AuthContext'
 import { deleteProject, getProjects } from './projectService'
 
@@ -10,8 +11,8 @@ export const ProjectsPage: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [actionError, setActionError] = useState<string | null>(null)
   const { user } = useAuth()
+  const { showError } = useToast()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
@@ -48,18 +49,16 @@ export const ProjectsPage: React.FC = () => {
   }
 
   const handleDelete = async (project: Project) => {
-    setActionError(null)
-
     try {
       await deleteProject(project.id)
       setProjects((prev) => prev.filter((item) => item.id !== project.id))
     } catch (err: unknown) {
       if (isAxiosError(err) && err.response?.status === 500) {
-        setActionError('No se puede eliminar el proyecto porque tiene tareas pendientes. Elimina las tareas antes de intentarlo de nuevo.')
+        showError('No se puede eliminar el proyecto porque tiene tareas pendientes. Elimina las tareas antes de intentarlo de nuevo.')
         return
       }
 
-      setActionError(err instanceof Error ? err.message : 'Error al eliminar el proyecto')
+      showError(err instanceof Error ? err.message : 'Error al eliminar el proyecto')
     }
   }
 
@@ -83,7 +82,6 @@ export const ProjectsPage: React.FC = () => {
           Nuevo proyecto
         </button>
       </div>
-      {actionError && <p className="mb-4 text-red-600">{actionError}</p>}
       <ul className="list-none space-y-4 p-0">
         {projects.map((p) => (
           <li key={p.id}>
