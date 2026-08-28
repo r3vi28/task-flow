@@ -6,6 +6,7 @@ import { TaskCard } from './TaskCard'
 import { TaskFilters } from './TaskFilters'
 import { TaskFormModal } from './TaskFormModal'
 import { deleteTask, getTasks } from './taskService'
+import { ConfirmModal } from '../../components/ConfirmModal'
 
 export const TasksPage = () => {
   const { projectId } = useParams()
@@ -19,6 +20,7 @@ export const TasksPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [deletingTaskId, setDeletingTaskId] = useState<number | null>(null)
+  const [taskToDelete, setTaskToDelete] = useState<Task | null>(null)
 
   const parsedProjectId = Number(projectId)
   const isValidProjectId = Boolean(projectId) && Number.isInteger(parsedProjectId) && parsedProjectId > 0
@@ -69,19 +71,24 @@ export const TasksPage = () => {
     )
   }
 
-  const handleDeleteTask = async (task: Task) => {
-    if (!window.confirm(`¿Eliminar la tarea "${task.title}"?`)) return
+  const handleDeleteTask = (task: Task) => {
+    setTaskToDelete(task)
+  }
+
+  const handleConfirmDeleteTask = async () => {
+    if (!taskToDelete) return
 
     setActionError(null)
-    setDeletingTaskId(task.id)
+    setDeletingTaskId(taskToDelete.id)
 
     try {
-      await deleteTask(task.id)
-      setTasks((currentTasks) => currentTasks.filter((item) => item.id !== task.id))
+      await deleteTask(taskToDelete.id)
+      setTasks((currentTasks) => currentTasks.filter((item) => item.id !== taskToDelete.id))
     } catch (caughtError: unknown) {
       setActionError(caughtError instanceof Error ? caughtError.message : 'Error al eliminar la tarea')
     } finally {
       setDeletingTaskId(null)
+      setTaskToDelete(null)
     }
   }
 
@@ -132,6 +139,14 @@ export const TasksPage = () => {
           task={selectedTask ?? undefined}
         />
       )}
+      <ConfirmModal
+        isOpen={taskToDelete !== null}
+        title="Eliminar tarea"
+        message={taskToDelete ? `¿Seguro que deseas eliminar la tarea "${taskToDelete.title}"?` : ''}
+        onConfirm={handleConfirmDeleteTask}
+        onCancel={() => setTaskToDelete(null)}
+        isLoading={deletingTaskId !== null}
+      />
     </div>
   )
 }

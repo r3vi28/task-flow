@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { isAxiosError } from 'axios'
 import { ProjectFormModal } from './ProjectFormModal'
 import { ProjectCard } from './ProjectCard'
 import type { Project } from '../../types/project'
@@ -53,6 +54,11 @@ export const ProjectsPage: React.FC = () => {
       await deleteProject(project.id)
       setProjects((prev) => prev.filter((item) => item.id !== project.id))
     } catch (err: unknown) {
+      if (isAxiosError(err) && err.response?.status === 500) {
+        setActionError('No se puede eliminar el proyecto porque tiene tareas pendientes. Elimina las tareas antes de intentarlo de nuevo.')
+        return
+      }
+
       setActionError(err instanceof Error ? err.message : 'Error al eliminar el proyecto')
     }
   }
