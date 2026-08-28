@@ -57,13 +57,13 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
   if (!isOpen) return null
 
   return (
-    <div className="modal-overlay" style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div className="modal-content" style={{ backgroundColor: '#fff', padding: '1.5rem', borderRadius: '0.5rem', width: '100%', maxWidth: '500px' }}>
-        <h2>{project ? 'Editar proyecto' : 'Nuevo proyecto'}</h2>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+        <h2 className="text-xl font-semibold text-gray-900">{project ? 'Editar proyecto' : 'Nuevo proyecto'}</h2>
+        {error && <p className="mt-3 text-red-600">{error}</p>}
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="project-name" style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <div className="mt-4">
+            <label htmlFor="project-name" className="mb-1 block font-medium text-gray-700">
               Nombre
             </label>
             <input
@@ -72,11 +72,11 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isSubmitting}
-              style={{ width: '100%', padding: '0.5rem' }}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="project-description" style={{ display: 'block', marginBottom: '0.25rem' }}>
+          <div className="mt-4">
+            <label htmlFor="project-description" className="mb-1 block font-medium text-gray-700">
               Descripción
             </label>
             <textarea
@@ -84,14 +84,23 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={isSubmitting}
-              style={{ width: '100%', padding: '0.5rem', minHeight: '100px' }}
+              className="min-h-25 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
             />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-            <button type="button" onClick={onClose} disabled={isSubmitting}>
+          <div className="mt-6 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-800 transition-colors hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
               Cancelar
             </button>
-            <button type="submit" disabled={isSubmitting}>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            >
               {project ? 'Actualizar' : 'Crear'}
             </button>
           </div>
