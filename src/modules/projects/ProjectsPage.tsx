@@ -3,6 +3,7 @@ import { isAxiosError } from 'axios'
 import { ProjectFormModal } from './ProjectFormModal'
 import { ProjectCard } from './ProjectCard'
 import type { Project } from '../../types/project'
+import { BackNav } from '../../components/BackNav'
 import { useToast } from '../../components/ToastContext'
 import { useAuth } from '../auth/AuthContext'
 import { deleteProject, getProjects } from './projectService'
@@ -72,6 +73,7 @@ export const ProjectsPage: React.FC = () => {
 
   return (
     <div className="p-6">
+      <BackNav />
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <h2 className="mr-auto text-2xl font-semibold text-gray-900">Proyectos</h2>
         <button

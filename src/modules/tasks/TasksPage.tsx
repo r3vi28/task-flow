@@ -7,6 +7,7 @@ import { TaskFilters } from './TaskFilters'
 import { TaskFormModal } from './TaskFormModal'
 import { deleteTask, getTasks } from './taskService'
 import { ConfirmModal } from '../../components/ConfirmModal'
+import { BackNav } from '../../components/BackNav'
 import { useToast } from '../../components/ToastContext'
 
 export const TasksPage = () => {
@@ -94,6 +95,7 @@ export const TasksPage = () => {
 
   return (
     <div className="p-6">
+      <BackNav />
       <div className="mb-6 flex flex-wrap items-center gap-3">
         <h2 className="mr-auto text-2xl font-semibold text-gray-900">Tareas</h2>
         <div className="flex flex-wrap items-end gap-3 [&>div]:mb-0">
