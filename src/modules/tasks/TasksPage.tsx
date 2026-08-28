@@ -86,20 +86,30 @@ export const TasksPage = () => {
   }
 
   return (
-    <div>
-      <h2>Tareas</h2>
-      <button type="button" onClick={handleCreateTask}>Nueva tarea</button>
-      <TaskFilters
-        status={filterStatus}
-        priority={filterPriority}
-        onStatusChange={setFilterStatus}
-        onPriorityChange={setFilterPriority}
-      />
-      {actionError && <p>{actionError}</p>}
-      {loading && <p>Cargando...</p>}
-      {error && <p>{error}</p>}
+    <div className="p-6">
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <h2 className="mr-auto text-2xl font-semibold text-gray-900">Tareas</h2>
+        <div className="flex flex-wrap items-end gap-3 [&>div]:mb-0">
+          <TaskFilters
+            status={filterStatus}
+            priority={filterPriority}
+            onStatusChange={setFilterStatus}
+            onPriorityChange={setFilterPriority}
+          />
+          <button
+            type="button"
+            onClick={handleCreateTask}
+            className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Nueva tarea
+          </button>
+        </div>
+      </div>
+      {actionError && <p className="mb-4 text-red-600">{actionError}</p>}
+      {loading && <p className="text-gray-600">Cargando...</p>}
+      {error && <p className="text-red-600">{error}</p>}
       {!loading && !error && (
-        <ul>
+        <ul className="list-none space-y-4 p-0">
           {filteredTasks.map((task) => (
             <li key={task.id}>
               <TaskCard

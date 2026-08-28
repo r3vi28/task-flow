@@ -58,19 +58,27 @@ export const ProjectsPage: React.FC = () => {
   }
 
   if (loading) {
-    return <p>Cargando...</p>
+    return <p className="p-6 text-gray-600">Cargando...</p>
   }
 
   if (error) {
-    return <p>{error}</p>
+    return <p className="p-6 text-red-600">{error}</p>
   }
 
   return (
-    <div>
-      <h2>Proyectos</h2>
-      {actionError && <p>{actionError}</p>}
-      <button type="button" onClick={handleCreate}>Nuevo proyecto</button>
-      <ul>
+    <div className="p-6">
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <h2 className="mr-auto text-2xl font-semibold text-gray-900">Proyectos</h2>
+        <button
+          type="button"
+          onClick={handleCreate}
+          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          Nuevo proyecto
+        </button>
+      </div>
+      {actionError && <p className="mb-4 text-red-600">{actionError}</p>}
+      <ul className="list-none space-y-4 p-0">
         {projects.map((p) => (
           <li key={p.id}>
             <ProjectCard
