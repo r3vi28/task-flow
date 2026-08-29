@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import type { PropsWithChildren } from 'react'
+import { CheckCircle2, CircleAlert } from 'lucide-react'
 
 export interface Toast {
   id: number
@@ -43,16 +44,14 @@ export const ToastProvider = ({ children }: PropsWithChildren) => {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <ul className="fixed top-4 left-1/2 z-50 flex w-full max-w-md -translate-x-1/2 flex-col gap-3 px-4">
+      <ul className="toast-list">
         {toasts.map((toast) => (
           <li
             key={toast.id}
             role="alert"
-            className={`rounded-lg px-4 py-3 font-medium text-white shadow-lg ${
-              toast.type === 'success' ? 'bg-green-600' : 'bg-red-600'
-            }`}
+            className={`toast ${toast.type === 'success' ? 'toast-success' : 'toast-error'}`}
           >
-            {toast.message}
+            {toast.type === 'success' ? <CheckCircle2 size={18} /> : <CircleAlert size={18} />}<span>{toast.message}</span>
           </li>
         ))}
       </ul>

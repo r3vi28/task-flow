@@ -7,8 +7,8 @@ import { TaskFilters } from './TaskFilters'
 import { TaskFormModal } from './TaskFormModal'
 import { deleteTask, getTasks, updateTask } from './taskService'
 import { ConfirmModal } from '../../components/ConfirmModal'
-import { BackNav } from '../../components/BackNav'
 import { useToast } from '../../components/ToastContext'
+import { ClipboardPlus, ListTodo } from 'lucide-react'
 
 export const TasksPage = () => {
   const { projectId } = useParams()
@@ -107,11 +107,10 @@ export const TasksPage = () => {
   }
 
   return (
-    <div className="p-6">
-      <BackNav />
-      <div className="mb-6 flex flex-wrap items-center gap-3">
-        <h2 className="mr-auto text-2xl font-semibold text-gray-900">Tareas</h2>
-        <div className="flex flex-wrap items-end gap-3 [&>div]:mb-0">
+    <div>
+      <div className="page-header">
+        <div><p className="eyebrow">Proyecto</p><h1 className="page-title">Tareas</h1><p className="page-description">Planifica prioridades y avanza cada entrega con claridad.</p></div>
+        <div className="page-actions">
           <TaskFilters
             status={filterStatus}
             priority={filterPriority}
@@ -121,16 +120,16 @@ export const TasksPage = () => {
           <button
             type="button"
             onClick={handleCreateTask}
-            className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="btn btn-primary"
           >
-            Nueva tarea
+            <ClipboardPlus size={17} /> Nueva tarea
           </button>
         </div>
       </div>
-      {loading && <p className="text-gray-600">Cargando...</p>}
-      {error && <p className="text-red-600">{error}</p>}
+      {loading && <div className="loading-state">Cargando tareas...</div>}
+      {error && <div className="error-state">{error}</div>}
       {!loading && !error && (
-        <ul className="list-none space-y-4 p-0">
+        filteredTasks.length === 0 ? <div className="surface empty-state"><ListTodo size={36} /><strong className="block text-slate-700">No hay tareas para mostrar</strong><p>Crea una tarea o ajusta los filtros para continuar.</p></div> : <ul className="grid list-none gap-4 p-0 lg:grid-cols-2">
           {filteredTasks.map((task) => (
             <li key={task.id}>
               <TaskCard

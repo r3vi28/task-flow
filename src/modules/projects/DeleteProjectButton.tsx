@@ -28,7 +28,7 @@ export const DeleteProjectButton: React.FC<Props> = ({ project, onDelete }) => {
         type="button"
         onClick={() => setIsConfirmModalOpen(true)}
         disabled={isDeleting}
-        className="rounded-md bg-red-600 px-4 py-2 font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        className="btn btn-danger"
       >
         Eliminar
       </button>

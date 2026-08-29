@@ -63,12 +63,12 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-        <h2 className="text-xl font-semibold text-gray-900">{project ? 'Editar proyecto' : 'Nuevo proyecto'}</h2>
+    <div className="modal-overlay">
+      <div className="modal" role="dialog" aria-modal="true">
+        <h2 className="modal-title">{project ? 'Editar proyecto' : 'Nuevo proyecto'}</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mt-4">
-            <label htmlFor="project-name" className="mb-1 block font-medium text-gray-700">
+          <div className="field mt-5">
+            <label htmlFor="project-name">
               Nombre
             </label>
             <input
@@ -77,11 +77,11 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isSubmitting}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="input"
             />
           </div>
-          <div className="mt-4">
-            <label htmlFor="project-description" className="mb-1 block font-medium text-gray-700">
+          <div className="field mt-4">
+            <label htmlFor="project-description">
               Descripción
             </label>
             <textarea
@@ -89,22 +89,22 @@ export const ProjectFormModal: React.FC<Props> = ({ isOpen, onClose, onSuccess, 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={isSubmitting}
-              className="min-h-25 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="input textarea"
             />
           </div>
-          <div className="mt-6 flex justify-end gap-2">
+          <div className="modal-actions">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-800 transition-colors hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn btn-secondary"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn btn-primary"
             >
               {project ? 'Actualizar' : 'Crear'}
             </button>

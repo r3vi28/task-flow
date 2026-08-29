@@ -93,12 +93,12 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
-        <h2 className="text-xl font-semibold text-gray-900">{task ? 'Editar tarea' : 'Nueva tarea'}</h2>
+    <div className="modal-overlay">
+      <div className="modal" role="dialog" aria-modal="true">
+        <h2 className="modal-title">{task ? 'Editar tarea' : 'Nueva tarea'}</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mt-4">
-            <label htmlFor="task-title" className="mb-1 block font-medium text-gray-700">
+          <div className="field mt-5">
+            <label htmlFor="task-title">
               Título
             </label>
             <input
@@ -107,11 +107,11 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               disabled={isSubmitting}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="input"
             />
           </div>
-          <div className="mt-4">
-            <label htmlFor="task-description" className="mb-1 block font-medium text-gray-700">
+          <div className="field mt-4">
+            <label htmlFor="task-description">
               Descripción
             </label>
             <textarea
@@ -119,11 +119,11 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               disabled={isSubmitting}
-              className="min-h-25 w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="input textarea"
             />
           </div>
-          <div className="mt-4">
-            <label htmlFor="task-status" className="mb-1 block font-medium text-gray-700">
+          <div className="field mt-4">
+            <label htmlFor="task-status">
               Estado
             </label>
             <select
@@ -131,15 +131,15 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={status}
               onChange={(event) => setStatus(event.target.value as Task['status'])}
               disabled={isSubmitting}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="input"
             >
               <option value="TODO">Pendiente</option>
               <option value="IN_PROGRESS">En progreso</option>
               <option value="DONE">Completada</option>
             </select>
           </div>
-          <div className="mt-4">
-            <label htmlFor="task-priority" className="mb-1 block font-medium text-gray-700">
+          <div className="field mt-4">
+            <label htmlFor="task-priority">
               Prioridad
             </label>
             <select
@@ -147,15 +147,15 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={priority}
               onChange={(event) => setPriority(event.target.value as Task['priority'])}
               disabled={isSubmitting}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="input"
             >
               <option value="LOW">Baja</option>
               <option value="MEDIUM">Media</option>
               <option value="HIGH">Alta</option>
             </select>
           </div>
-          <div className="mt-4">
-            <label htmlFor="task-due-date" className="mb-1 block font-medium text-gray-700">
+          <div className="field mt-4">
+            <label htmlFor="task-due-date">
               Fecha límite
             </label>
             <input
@@ -164,22 +164,22 @@ export const TaskFormModal = ({ isOpen, onClose, onSuccess, projectId, task }: P
               value={dueDate}
               onChange={(event) => setDueDate(event.target.value)}
               disabled={isSubmitting}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+              className="input"
             />
           </div>
-          <div className="mt-6 flex justify-end gap-2">
+          <div className="modal-actions">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="rounded-md bg-gray-200 px-4 py-2 font-medium text-gray-800 transition-colors hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn btn-secondary"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+              className="btn btn-primary"
             >
               {task ? 'Actualizar' : 'Crear'}
             </button>

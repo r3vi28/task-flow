@@ -3,10 +3,10 @@ import { isAxiosError } from 'axios'
 import { ProjectFormModal } from './ProjectFormModal'
 import { ProjectCard } from './ProjectCard'
 import type { Project } from '../../types/project'
-import { BackNav } from '../../components/BackNav'
 import { useToast } from '../../components/ToastContext'
 import { useAuth } from '../auth/AuthContext'
 import { deleteProject, getProjects } from './projectService'
+import { FolderPlus, FolderKanban } from 'lucide-react'
 
 export const ProjectsPage: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([])
@@ -64,27 +64,26 @@ export const ProjectsPage: React.FC = () => {
   }
 
   if (loading) {
-    return <p className="p-6 text-gray-600">Cargando...</p>
+    return <div className="loading-state">Cargando proyectos...</div>
   }
 
   if (error) {
-    return <p className="p-6 text-red-600">{error}</p>
+    return <div className="error-state">{error}</div>
   }
 
   return (
-    <div className="p-6">
-      <BackNav />
-      <div className="mb-6 flex flex-wrap items-center gap-3">
-        <h2 className="mr-auto text-2xl font-semibold text-gray-900">Proyectos</h2>
+    <div>
+      <div className="page-header">
+        <div><p className="eyebrow">Organización</p><h1 className="page-title">Proyectos</h1><p className="page-description">Agrupa el trabajo y mantén cada objetivo bajo control.</p></div>
         <button
           type="button"
           onClick={handleCreate}
-          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="btn btn-primary"
         >
-          Nuevo proyecto
+          <FolderPlus size={17} /> Nuevo proyecto
         </button>
       </div>
-      <ul className="list-none space-y-4 p-0">
+      {projects.length === 0 ? <div className="surface empty-state"><FolderKanban size={36} /><strong className="block text-slate-700">Aún no hay proyectos</strong><p>Crea el primero para comenzar a organizar tu trabajo.</p></div> : <ul className="grid list-none gap-4 p-0 lg:grid-cols-2">
         {projects.map((p) => (
           <li key={p.id}>
             <ProjectCard
@@ -95,7 +94,7 @@ export const ProjectsPage: React.FC = () => {
             />
           </li>
         ))}
-      </ul>
+      </ul>}
       <ProjectFormModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

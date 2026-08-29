@@ -1,3 +1,4 @@
+import { CalendarDays, Pencil } from 'lucide-react'
 import type { Task } from '../../types/task'
 
 const statusLabels: Record<Task['status'], string> = {
@@ -23,16 +24,17 @@ export const TaskCard = ({ task, onEdit, onDelete, onStatusChange, isDeleting, i
       : ['DONE']
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-      <h3 className="text-xl font-semibold text-gray-900">{task.title}</h3>
-      <div className="mt-3 flex items-center gap-2 text-gray-700">
+    <div className="surface list-card">
+      <h3 className="item-title">{task.title}</h3>
+      {task.description && <p className="item-copy">{task.description}</p>}
+      <div className="mt-4 flex flex-wrap items-center gap-2 text-gray-700">
         <label htmlFor={`task-status-${task.id}`}>Estado:</label>
         <select
           id={`task-status-${task.id}`}
           value={task.status}
           onChange={(event) => onStatusChange(task, event.target.value as Task['status'])}
           disabled={task.status === 'DONE'}
-          className={`rounded-md border border-gray-300 px-2.5 py-1 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-60 ${
+          className={`input w-auto py-1 text-sm font-semibold ${
             task.status === 'TODO'
               ? 'bg-gray-100 text-gray-700'
               : task.status === 'IN_PROGRESS'
@@ -45,10 +47,10 @@ export const TaskCard = ({ task, onEdit, onDelete, onStatusChange, isDeleting, i
           ))}
         </select>
       </div>
-      <p className="mt-2 text-gray-700">
-        Prioridad:{' '}
+      <div className="mt-3 flex flex-wrap items-center gap-2 text-sm text-slate-600">
+        <span>Prioridad</span>
         <span
-          className={`inline-flex rounded-full px-2.5 py-0.5 text-sm font-semibold ${
+          className={`badge ${
             task.priority === 'LOW'
               ? 'bg-green-100 text-green-800'
               : task.priority === 'MEDIUM'
@@ -58,21 +60,22 @@ export const TaskCard = ({ task, onEdit, onDelete, onStatusChange, isDeleting, i
         >
           {task.priority}
         </span>
-      </p>
-      <div className="mt-5 flex justify-end gap-3">
+      </div>
+      {task.dueDate && <p className="item-copy flex items-center gap-2"><CalendarDays size={15} />Entrega: {new Date(task.dueDate).toLocaleDateString('es-DO', { dateStyle: 'medium' })}</p>}
+      <div className="mt-5 flex flex-wrap gap-2 border-t border-slate-100 pt-4">
         <button
           type="button"
           onClick={() => onEdit(task)}
-          className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="btn btn-secondary"
         >
-          Editar
+          <Pencil size={15} /> Editar
         </button>
         {isAdmin && (
           <button
             type="button"
             onClick={() => onDelete(task)}
             disabled={isDeleting}
-            className="rounded-md bg-red-600 px-4 py-2 font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="btn btn-danger"
           >
             {isDeleting ? 'Eliminando...' : 'Eliminar'}
           </button>

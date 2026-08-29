@@ -54,44 +54,41 @@ export const LoginPage: React.FC = () => {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-5 rounded-lg bg-white p-8 shadow-lg"
-    >
-      <img className="mx-auto h-30 w-auto object-contain" src={logo} alt="Task Flow" />
-      <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">Email:</label>
+    <main className="auth-page"><form onSubmit={handleSubmit} noValidate className="auth-card">
+      <img className="auth-logo" src={logo} alt="Task Flow" />
+      <h1 className="auth-title">Bienvenido de nuevo</h1><p className="auth-copy">Inicia sesión para continuar con tu espacio de trabajo.</p>
+      <div className="field">
+        <label>Email</label>
         <input
           type="email"
           name="email"
           value={values.email}
           onChange={handleChange}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          className="input"
         />
-        {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+        {errors.email && <p className="form-error">{errors.email}</p>}
       </div>
-      <div className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">Contraseña:</label>
+      <div className="field mt-4">
+        <label>Contraseña</label>
         <input
           type="password"
           name="password"
           value={values.password}
           onChange={handleChange}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          className="input"
         />
-        {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+        {errors.password && <p className="form-error">{errors.password}</p>}
       </div>
-      {generalError && <p className="text-sm text-red-600">{generalError}</p>}
+      {generalError && <p className="form-error mt-4">{generalError}</p>}
       <button
         type="submit"
-        className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="btn btn-primary mt-6 w-full"
       >
         Iniciar Sesión
       </button>
-      <p className="text-sm text-gray-600">
-        ¿No tienes cuenta? <Link className="font-medium text-blue-600 hover:text-blue-700 hover:underline" to="/register">Regístrate</Link>
+      <p className="mt-5 text-sm text-slate-500">
+        ¿No tienes cuenta? <Link className="font-semibold text-blue-700 hover:underline" to="/register">Regístrate</Link>
       </p>
-    </form>
+    </form></main>
   )
 }
